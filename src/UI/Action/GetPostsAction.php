@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Throwable;
 
 class GetPostsAction
 {
@@ -18,13 +19,20 @@ class GetPostsAction
 
     public function __invoke(Request $request): JsonResponse
     {
-        $posts = $this->messageBus->dispatch(
-            new GetPostsQuery()
-        );
+        try {
+            $posts = $this->messageBus->dispatch(
+                new GetPostsQuery()
+            );
 
-        return new JsonResponse(
-            $posts->last(HandledStamp::class)->getResult(),
-            Response::HTTP_OK
-        );
+            return new JsonResponse(
+                $posts->last(HandledStamp::class)->getResult(),
+                Response::HTTP_OK
+            );
+        } catch (Throwable $throwable) {
+            return new JsonResponse(
+                ['error' => 'HTTP_INTERNAL_SERVER_ERROR'],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }
