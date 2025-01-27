@@ -3,7 +3,7 @@
 namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Model\Post\Post;
-use App\Domain\Model\Repository\PostRepositoryInterface;
+use App\Domain\Repository\PostRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
 use Symfony\Component\Uid\Uuid;

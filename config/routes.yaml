@@ -1,5 +1,4 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+get_posts:
+    path: /posts
+    methods: GET
+    controller: App\UI\Action\GetPostsAction

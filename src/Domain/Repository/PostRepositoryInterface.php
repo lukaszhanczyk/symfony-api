@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain\Model\Repository;
+namespace App\Domain\Repository;
 
 use App\Domain\Model\Post\Post;
 use Symfony\Component\Uid\Uuid;
