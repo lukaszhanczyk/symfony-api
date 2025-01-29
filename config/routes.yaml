@@ -12,3 +12,8 @@ delete_posts:
     path: /posts
     methods: DELETE
     controller: App\UI\Action\DeletePostsAction
+
+update_posts:
+    path: /posts
+    methods: PUT
+    controller: App\UI\Action\UpdatePostsAction

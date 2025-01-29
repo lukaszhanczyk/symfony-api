@@ -2,8 +2,8 @@
 
 namespace App\UI\Action;
 
-use App\Application\Command\DeletePost\DeletePostsCommand;
-use App\UI\Request\DeletePostsRequest;
+use App\Application\Command\UpdatePosts\UpdatePostsCommand;
+use App\UI\Request\UpdatePostsRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Uid\Uuid;
 use Throwable;
 
-class DeletePostsAction
+class UpdatePostsAction
 {
     public function __construct(
         private MessageBusInterface $messageBus,
@@ -19,18 +19,21 @@ class DeletePostsAction
     }
 
     public function __invoke(
-        #[MapRequestPayload] DeletePostsRequest $request
+        #[MapRequestPayload] UpdatePostsRequest $request
     ): JsonResponse {
         try {
             $this->messageBus->dispatch(
-                new DeletePostsCommand(
+                new UpdatePostsCommand(
                     Uuid::fromString($request->id),
+                    $request->title,
+                    $request->postContent,
                 )
             );
 
             return new JsonResponse(
                 status: Response::HTTP_ACCEPTED
             );
+
         } catch (Throwable $throwable) {
             return new JsonResponse(
                 ['error' => 'HTTP_INTERNAL_SERVER_ERROR'],
