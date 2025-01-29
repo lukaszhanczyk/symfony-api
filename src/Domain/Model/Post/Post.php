@@ -26,8 +26,13 @@ class Post implements JsonSerializable
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
 
-    public function __construct(string $title, string $content, \DateTimeInterface $createdAt)
-    {
+    public function __construct(
+        Uuid $id,
+        string $title,
+        string $content,
+        \DateTimeInterface $createdAt
+    ) {
+        $this->id = $id;
         $this->title = $title;
         $this->content = $content;
         $this->createdAt = $createdAt;
@@ -73,7 +78,7 @@ class Post implements JsonSerializable
         $this->createdAt = $createdAt;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id->toBase32(),

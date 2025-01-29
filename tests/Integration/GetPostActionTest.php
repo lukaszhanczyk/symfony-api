@@ -29,12 +29,11 @@ class GetPostActionTest extends WebTestCase
         $repo = $this->container->get(PostRepositoryInterface::class);
 
         $post = new Post(
+            Uuid::v1(),
             'test',
             'test',
             new DateTimeImmutable()
         );
-
-        $post->setId(Uuid::v1());
 
         $repo->save($post);
 

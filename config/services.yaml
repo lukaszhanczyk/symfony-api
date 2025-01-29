@@ -21,11 +21,27 @@ services:
             - '../src/Kernel.php'
         autowire: true
 
+    App\Application\Query\GetPosts\GetPostsHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'query.bus' }
+
+    App\Application\Command\AddPosts\AddPostsHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
     App\Infrastructure\Persistence\Doctrine\PostRepository: ~
 
     App\Domain\Repository\PostRepositoryInterface: '@App\Infrastructure\Persistence\Doctrine\PostRepository'
 
+
     App\UI\Action\GetPostsAction:
         tags: ['controller.service_arguments']
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+
+    App\UI\Action\AddPostsAction:
+        tags: [ 'controller.service_arguments' ]
+
+
+    App\Infrastructure\Listener\ValidationExceptionListener:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+

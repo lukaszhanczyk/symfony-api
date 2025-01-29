@@ -2,3 +2,8 @@ get_posts:
     path: /posts
     methods: GET
     controller: App\UI\Action\GetPostsAction
+
+add_posts:
+    path: /posts
+    methods: POST
+    controller: App\UI\Action\AddPostsAction
