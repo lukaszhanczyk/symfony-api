@@ -2,15 +2,15 @@
 
 namespace App\UI\Action;
 
-use App\Application\Command\AddPosts\AddPostsCommand;
-use App\UI\Request\AddPostsRequest;
+use App\Application\Command\Registration\RegistrationCommand;
+use App\UI\Request\RegistrationRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Throwable;
 
-class AddPostsAction
+class RegistrationAction
 {
     public function __construct(
         private MessageBusInterface $messageBus,
@@ -18,13 +18,13 @@ class AddPostsAction
     }
 
     public function __invoke(
-        #[MapRequestPayload] AddPostsRequest $request
+        #[MapRequestPayload] RegistrationRequest $request
     ): JsonResponse {
         try {
             $this->messageBus->dispatch(
-                new AddPostsCommand(
-                    $request->title,
-                    $request->postContent,
+                new RegistrationCommand(
+                    $request->email,
+                    $request->password,
                 )
             );
 

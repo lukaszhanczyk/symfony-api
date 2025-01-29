@@ -2,14 +2,14 @@
 
 namespace App\Tests\Integration;
 
-use App\Domain\Model\Post\Post;
-use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\Model\User\User;
+use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
 
-class AddPostActionTest extends WebTestCase
+class RegistrationActionTest extends WebTestCase
 {
     private KernelBrowser $client;
     private Container $container;
@@ -24,47 +24,46 @@ class AddPostActionTest extends WebTestCase
 
     public function testInvoke(): void
     {
-        $repo = $this->container->get(PostRepositoryInterface::class);
+        $repo = $this->container->get(UserRepositoryInterface::class);
 
         $this->client->request(
             method: 'POST',
-            uri: '/posts',
+            uri: '/registration',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode(
                 [
-                    'title' => 'test',
-                    'postContent' => 'test',
+                    'email' => 'test@test.com',
+                    'password' => 'test',
                 ]
             )
         );
 
         $response = $this->client->getResponse();
 
-        /** @var Post $post */
-        $post = $repo->findAll()[0];
-        $repo->delete($post);
+        /** @var User $user */
+        $user = $repo->findAll()[0];
+        $repo->delete($user);
 
-        $this->assertEquals('test', $post->getTitle());
-        $this->assertEquals('test', $post->getContent());
+        $this->assertEquals('test@test.com', $user->getEmail());
         $this->assertEquals(Response::HTTP_ACCEPTED, $response->getStatusCode());
     }
 
     public function testInvokeError(): void
     {
-        $mockRepo = $this->createMock(PostRepositoryInterface::class);
+        $mockRepo = $this->createMock(UserRepositoryInterface::class);
         $mockRepo->method('save')
             ->willThrowException(new \Exception());
-        $this->container->set(PostRepositoryInterface::class, $mockRepo);
+        $this->container->set(UserRepositoryInterface::class, $mockRepo);
 
 
         $this->client->request(
             method: 'POST',
-            uri: '/posts',
+            uri: '/registration',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode(
                 [
-                    'title' => 'test',
-                    'postContent' => 'test',
+                    'email' => 'test@test.com',
+                    'password' => 'test',
                 ]
             )
         );
@@ -78,12 +77,12 @@ class AddPostActionTest extends WebTestCase
     {
         $this->client->request(
             method: 'POST',
-            uri: '/posts',
+            uri: '/registration',
             server: ['CONTENT_TYPE' => 'application/json'],
             content: json_encode(
                 [
-                    'title' => 'test',
-                    'postContent' => '',
+                    'email' => 'test',
+                    'password' => 'test',
                 ]
             )
         );
@@ -94,7 +93,7 @@ class AddPostActionTest extends WebTestCase
             json_encode(
                 [
                     'errors' => [
-                        'postContent' => 'This value should not be blank.'
+                        'email' => 'This value is not a valid email address.'
                     ]
                 ]
             ),

@@ -2,24 +2,19 @@
 
 namespace App\UI\Request;
 
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class UpdatePostsRequest
+class RegistrationRequest
 {
-    #[Type('string')]
-    #[Length(max: 180)]
+    #[Email]
     #[NotBlank]
-    public string $id;
+    public string $email;
 
     #[Type('string')]
-    #[Length(max: 180)]
+    #[Length(max: 100)]
     #[NotBlank]
-    public string $title;
-
-    #[Type('string')]
-    #[Length(max: 500)]
-    #[NotBlank]
-    public string $postContent;
+    public string $password;
 }

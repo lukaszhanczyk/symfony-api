@@ -13,7 +13,7 @@ class PostRepository implements PostRepositoryInterface
     private ObjectRepository $repository;
 
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ){
         $this->repository = $entityManager->getRepository(Post::class);
     }

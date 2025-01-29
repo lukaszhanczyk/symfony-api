@@ -29,9 +29,23 @@ services:
         tags:
             - { name: 'messenger.message_handler', bus: 'command.bus' }
 
+    App\Application\Command\DeletePosts\DeletePostsHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\Application\Command\UpdatePosts\UpdatePostsHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
+    App\Application\Command\Registration\RegistrationHandler:
+        tags:
+            - { name: 'messenger.message_handler', bus: 'command.bus' }
+
     App\Infrastructure\Persistence\Doctrine\PostRepository: ~
+    App\Infrastructure\Persistence\Doctrine\UserRepository: ~
 
     App\Domain\Repository\PostRepositoryInterface: '@App\Infrastructure\Persistence\Doctrine\PostRepository'
+    App\Domain\Repository\UserRepositoryInterface: '@App\Infrastructure\Persistence\Doctrine\UserRepository'
 
 
     App\UI\Action\GetPostsAction:
@@ -44,6 +58,9 @@ services:
         tags: [ 'controller.service_arguments' ]
 
     App\UI\Action\UpdatePostsAction:
+        tags: [ 'controller.service_arguments' ]
+
+    App\UI\Action\RegistrationAction:
         tags: [ 'controller.service_arguments' ]
 
 

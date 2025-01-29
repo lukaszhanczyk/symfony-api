@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Command\DeletePost;
+namespace App\Application\Command\DeletePosts;
 
 use App\Domain\Repository\PostRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;

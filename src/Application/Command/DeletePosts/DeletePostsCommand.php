@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Command\DeletePost;
+namespace App\Application\Command\DeletePosts;
 
 use Symfony\Component\Uid\Uuid;
 

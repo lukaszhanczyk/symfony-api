@@ -17,3 +17,8 @@ update_posts:
     path: /posts
     methods: PUT
     controller: App\UI\Action\UpdatePostsAction
+
+registration:
+    path: /registration
+    methods: POST
+    controller: App\UI\Action\RegistrationAction

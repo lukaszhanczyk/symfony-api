@@ -2,12 +2,8 @@
 
 namespace App\Application\Command\UpdatePosts;
 
-use App\Application\Command\AddPosts\AddPostsCommand;
-use App\Domain\Model\Post\Post;
 use App\Domain\Repository\PostRepositoryInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Component\Uid\Uuid;
-use DateTimeImmutable;
 use Throwable;
 
 #[AsMessageHandler]

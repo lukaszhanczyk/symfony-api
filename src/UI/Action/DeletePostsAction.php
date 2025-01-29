@@ -2,7 +2,7 @@
 
 namespace App\UI\Action;
 
-use App\Application\Command\DeletePost\DeletePostsCommand;
+use App\Application\Command\DeletePosts\DeletePostsCommand;
 use App\UI\Request\DeletePostsRequest;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
