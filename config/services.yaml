@@ -40,6 +40,9 @@ services:
     App\UI\Action\AddPostsAction:
         tags: [ 'controller.service_arguments' ]
 
+    App\UI\Action\DeletePostsAction:
+        tags: [ 'controller.service_arguments' ]
+
 
     App\Infrastructure\Listener\ValidationExceptionListener:
         tags:

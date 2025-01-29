@@ -7,3 +7,8 @@ add_posts:
     path: /posts
     methods: POST
     controller: App\UI\Action\AddPostsAction
+
+delete_posts:
+    path: /posts
+    methods: DELETE
+    controller: App\UI\Action\DeletePostsAction
