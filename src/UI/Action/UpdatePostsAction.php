@@ -3,7 +3,9 @@
 namespace App\UI\Action;
 
 use App\Application\Command\UpdatePosts\UpdatePostsCommand;
+use App\Application\Enum\Error;
 use App\UI\Request\UpdatePostsRequest;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -15,6 +17,7 @@ class UpdatePostsAction
 {
     public function __construct(
         private MessageBusInterface $messageBus,
+        private LoggerInterface $logger
     ) {
     }
 
@@ -35,6 +38,13 @@ class UpdatePostsAction
             );
 
         } catch (Throwable $throwable) {
+            $this->logger->error(
+                Error::UPDATE_POST_ACTION_ERROR->value,
+                [
+                    'message' => $throwable->getMessage(),
+                    'code' => $throwable->getCode(),
+                ]
+            );
             return new JsonResponse(
                 ['error' => 'HTTP_INTERNAL_SERVER_ERROR'],
                 Response::HTTP_INTERNAL_SERVER_ERROR
