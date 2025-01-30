@@ -22,3 +22,6 @@ registration:
     path: /registration
     methods: POST
     controller: App\UI\Action\RegistrationAction
+
+api_login_check:
+    path: /api/login_check
