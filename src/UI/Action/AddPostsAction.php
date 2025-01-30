@@ -28,6 +28,7 @@ class AddPostsAction
                 new AddPostsCommand(
                     $request->title,
                     $request->postContent,
+                    $request->userId,
                 )
             );
 

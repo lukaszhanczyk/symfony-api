@@ -7,6 +7,7 @@ readonly class AddPostsCommand
     public function __construct(
         private string $title,
         private string $content,
+        private int $userId,
     ) {
     }
 
@@ -18,5 +19,10 @@ readonly class AddPostsCommand
     public function getContent(): string
     {
         return $this->content;
+    }
+
+    public function getUserID(): int
+    {
+        return $this->userId;
     }
 }

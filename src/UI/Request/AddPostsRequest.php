@@ -17,4 +17,8 @@ class AddPostsRequest
     #[Length(max: 500)]
     #[NotBlank]
     public string $postContent;
+
+    #[Type('integer')]
+    #[NotBlank]
+    public int $userId;
 }

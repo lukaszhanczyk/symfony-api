@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Model\Post;
 
+use App\Domain\Model\User\User;
 use DateTimeInterface;
 use JsonSerializable;
 use Symfony\Component\Uid\Uuid;
@@ -26,15 +27,21 @@ class Post implements JsonSerializable
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $createdAt;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'users')]
+    private User $user;
+
+
     public function __construct(
         Uuid $id,
         string $title,
         string $content,
+        User $user,
         \DateTimeInterface $createdAt
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
+        $this->user = $user;
         $this->createdAt = $createdAt;
     }
 
@@ -78,6 +85,16 @@ class Post implements JsonSerializable
         $this->createdAt = $createdAt;
     }
 
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
     public function jsonSerialize(): array
     {
         return [
@@ -85,6 +102,7 @@ class Post implements JsonSerializable
             'title' => $this->title,
             'content' => $this->content,
             'createdAt' => $this->createdAt,
+            'user' => $this->user->getEmail(),
         ];
     }
 }

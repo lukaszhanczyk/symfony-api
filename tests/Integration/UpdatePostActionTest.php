@@ -3,7 +3,9 @@
 namespace App\Tests\Integration;
 
 use App\Domain\Model\Post\Post;
+use App\Domain\Model\User\User;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -26,17 +28,28 @@ class UpdatePostActionTest extends WebTestCase
 
     public function testInvoke(): void
     {
-        $repo = $this->container->get(PostRepositoryInterface::class);
+        $repoPost = $this->container->get(PostRepositoryInterface::class);
+        $repoUser = $this->container->get(UserRepositoryInterface::class);
+
+        $newUser = new User();
+        $newUser->setEmail('test@test.com');
+        $newUser->setRoles(['ROLE_USER']);
+        $newUser->setPassword('test');
+
+        $repoUser->save($newUser);
+
+        $user = $repoUser->findAll()[0];
 
         $id = Uuid::v1();
         $post = new Post(
             $id,
             'test',
             'test',
+            $user,
             new DateTimeImmutable()
         );
 
-        $repo->save($post);
+        $repoPost->save($post);
 
         $this->client->request(
             method: 'PUT',
@@ -54,8 +67,9 @@ class UpdatePostActionTest extends WebTestCase
         $response = $this->client->getResponse();
 
         /** @var Post $post */
-        $post = $repo->findAll()[0];
-        $repo->delete($post);
+        $post = $repoPost->findAll()[0];
+        $repoPost->delete($post);
+        $repoUser->delete($user);
 
         $this->assertEquals('test1', $post->getTitle());
         $this->assertEquals('test1', $post->getContent());
@@ -109,7 +123,8 @@ class UpdatePostActionTest extends WebTestCase
             json_encode(
                 [
                     'errors' => [
-                        'postContent' => 'This value should not be blank.'
+                        'postContent' => 'This value should not be blank.',
+                        'userId' => 'This value should not be blank.',
                     ]
                 ]
             ),

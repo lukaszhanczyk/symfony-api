@@ -3,7 +3,9 @@
 namespace App\Tests\Integration;
 
 use App\Domain\Model\Post\Post;
+use App\Domain\Model\User\User;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use DateTimeImmutable;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -26,20 +28,32 @@ class GetPostActionTest extends WebTestCase
 
     public function testInvoke(): void
     {
-        $repo = $this->container->get(PostRepositoryInterface::class);
+        $repoPost = $this->container->get(PostRepositoryInterface::class);
+        $repoUser = $this->container->get(UserRepositoryInterface::class);
+
+        $newUser = new User();
+        $newUser->setEmail('test@test.com');
+        $newUser->setRoles(['ROLE_USER']);
+        $newUser->setPassword('test');
+
+        $repoUser->save($newUser);
+
+        $user = $repoUser->findAll()[0];
 
         $post = new Post(
             Uuid::v1(),
             'test',
             'test',
+            $user,
             new DateTimeImmutable()
         );
 
-        $repo->save($post);
+        $repoPost->save($post);
 
         $this->client->request('GET', '/posts');
         $response = $this->client->getResponse();
-        $repo->delete($post);
+        $repoPost->delete($post);
+        $repoUser->delete($user);
 
         $this->assertEquals(json_encode([$post->jsonSerialize()]), $response->getContent());
     }

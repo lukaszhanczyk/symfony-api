@@ -3,7 +3,9 @@
 namespace App\Tests\Integration;
 
 use App\Domain\Model\Post\Post;
+use App\Domain\Model\User\User;
 use App\Domain\Repository\PostRepositoryInterface;
+use App\Domain\Repository\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
@@ -24,7 +26,17 @@ class AddPostActionTest extends WebTestCase
 
     public function testInvoke(): void
     {
-        $repo = $this->container->get(PostRepositoryInterface::class);
+        $repoPost = $this->container->get(PostRepositoryInterface::class);
+        $repoUser = $this->container->get(UserRepositoryInterface::class);
+
+        $newUser = new User();
+        $newUser->setEmail('test@test.com');
+        $newUser->setRoles(['ROLE_USER']);
+        $newUser->setPassword('test');
+
+        $repoUser->save($newUser);
+
+        $user = $repoUser->findAll()[0];
 
         $this->client->request(
             method: 'POST',
@@ -34,6 +46,7 @@ class AddPostActionTest extends WebTestCase
                 [
                     'title' => 'test',
                     'postContent' => 'test',
+                    'userId' => $user->getId(),
                 ]
             )
         );
@@ -41,8 +54,9 @@ class AddPostActionTest extends WebTestCase
         $response = $this->client->getResponse();
 
         /** @var Post $post */
-        $post = $repo->findAll()[0];
-        $repo->delete($post);
+        $post = $repoPost->findAll()[0];
+        $repoPost->delete($post);
+        $repoUser->delete($user);
 
         $this->assertEquals('test', $post->getTitle());
         $this->assertEquals('test', $post->getContent());
@@ -65,6 +79,7 @@ class AddPostActionTest extends WebTestCase
                 [
                     'title' => 'test',
                     'postContent' => 'test',
+                    'userId' => 1,
                 ]
             )
         );
@@ -84,6 +99,7 @@ class AddPostActionTest extends WebTestCase
                 [
                     'title' => 'test',
                     'postContent' => '',
+                    'userId' => 1,
                 ]
             )
         );
