@@ -21,7 +21,7 @@ readonly class AddPostsCommand
         return $this->content;
     }
 
-    public function getUserID(): int
+    public function getUserId(): int
     {
         return $this->userId;
     }
