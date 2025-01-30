@@ -42,6 +42,7 @@ class DeletePostsAction
                     'code' => $throwable->getCode(),
                 ]
             );
+
             return new JsonResponse(
                 ['error' => 'HTTP_INTERNAL_SERVER_ERROR'],
                 Response::HTTP_INTERNAL_SERVER_ERROR
